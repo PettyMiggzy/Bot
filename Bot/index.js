@@ -6,7 +6,11 @@ import { ethers } from 'ethers';
 
 import { initDB } from './db.js';
 import { raffleFeature } from './raffle.js';
+import { activityFeature } from './activity.js';
 
+// ... after creating bot, provider, db
+activityFeature(bot, db);
+raffleFeature(bot, provider, db);
 // ----- CONFIG -----
 const PORT = Number(process.env.PORT || 10000);
 const BOT_TOKEN = process.env.BOT_TOKEN;
@@ -61,3 +65,4 @@ bot.launch()
 
 process.once('SIGINT',  () => bot.stop('SIGINT'));
 process.once('SIGTERM', () => bot.stop('SIGTERM'));
+
