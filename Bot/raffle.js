@@ -2,8 +2,8 @@ import { ethers } from 'ethers';
 import dayjs from 'dayjs';
 import { nanoid } from 'nanoid';
 import { createHash } from 'crypto';
-import { db } from '../db.js';
-import { CFG } from '../config.js';
+import { initDB } from './db.js';
+import { CFG } from './config.js';
 
 const ERC20_ABI = [
   "event Transfer(address indexed from, address indexed to, uint256 value)"
@@ -271,3 +271,4 @@ export function raffleFeature(bot, provider) {
 
   setInterval(scan, INTERVAL_MS);
 }
+
