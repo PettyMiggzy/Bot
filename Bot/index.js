@@ -1,40 +1,52 @@
+// Bot/index.js — single-folder setup
 import { Telegraf } from 'telegraf';
-import dotenv from 'dotenv';
-import { CFG } from './config.js';
-import { initDB } from './db.js';
-import './health.js';
 
-import { raffle }      from './raffle.js';
-import { wallet }      from './wallet.js';
-import { mod }         from './mod.js';
-import { hype }        from './hype.js';
-import { inactivity }  from './inactivity.js';
-import { holders }     from './holders.js';
-import { buys }        from './buys.js';
-import { balances }    from './balances.js';
-import { leaderboard } from './leaderboard.js';
-import { jackpot }     from './jackpot.js';
-import { quests }      from './quests.js';
+// ---- env (Render injects) ----
+const BOT_TOKEN = process.env.BOT_TOKEN;
+if (!BOT_TOKEN) {
+  console.error('❌ BOT_TOKEN missing'); process.exit(1);
+}
 
-dotenv.config();
+const bot = new Telegraf(BOT_TOKEN);
 
-const bot = new Telegraf(process.env.BOT_TOKEN);
-await initDB();
+// --- core commands ---
+bot.command('ping', (ctx) => ctx.reply(process.env.PING_REPLY || 'Pong 🐉'));
 
-bot.command('ping', (ctx) => ctx.reply('pong'));
+// ---- feature imports (same folder as this file) ----
+// ⬇️ IMPORTANT: no "./features/..." here.
+import { raffleFeature }      from './raffle.js';
+import { buysFeature }        from './buys.js';
+import { walletFeature }      from './wallet.js';
+import { modFeature }         from './mod.js';
+import { hypeFeature }        from './hype.js';
+import { inactivityFeature }  from './inactivity.js';
+import { holdersFeature }     from './holders.js';
+import { balancesFeature }    from './balances.js';
+import { leaderboardFeature } from './leaderboard.js';
+import { jackpotFeature }     from './jackpot.js';
+import { questsFeature }      from './quests.js';
 
-raffle(bot);
-wallet(bot);
-mod(bot);
-hype(bot);
-inactivity(bot);
-holders(bot);
-buys(bot);
-balances(bot);
-leaderboard(bot);
-jackpot(bot);
-quests(bot);
+// ---- register features (each must export the listed function) ----
+raffleFeature?.(bot);
+buysFeature?.(bot);
+walletFeature?.(bot);
+modFeature?.(bot);
+hypeFeature?.(bot);
+inactivityFeature?.(bot);
+holdersFeature?.(bot);
+balancesFeature?.(bot);
+leaderboardFeature?.(bot);
+jackpotFeature?.(bot);
+questsFeature?.(bot);
 
-bot.launch();
-console.log('✅ MIGGZY bot running');
+// ---- launch ----
+bot.launch().then(() => {
+  console.log('🚀 Miggzy Bot live (Bot/index.js, same-folder imports)');
+}).catch(err => {
+  console.error('Boot error:', err);
+  process.exit(1);
+});
 
+// graceful stop for Render
+process.once('SIGINT',  () => bot.stop('SIGINT'));
+process.once('SIGTERM', () => bot.stop('SIGTERM'));
