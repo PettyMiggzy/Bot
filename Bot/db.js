@@ -1,29 +1,24 @@
-import { Low } from 'lowdb';
-import { JSONFile } from 'lowdb/node';
+// Bot/db.js
+import { Low } from 'lowdb'
+import { JSONFile } from 'lowdb/node'
 
-const adapter = new JSONFile('./data.json');
-export const db = new Low(adapter, {});
-
-function ensureShape() {
-  const d = db.data || {};
-  d.users     ||= {};
-  d.wallets   ||= {};
-  d.raffles   ||= {};
-  d.tickets   ||= {};
-  d.blocks    ||= { last: 0 };
-  d.activity  ||= {};
-  d.whitelist ||= {};
-  d.settings  ||= { alertChats: [], lastAlerts: {} };
-
-  // NEW in Phase 4:
-  d.stats     ||= { wallets: {} };     // { wallet: { tickets: number, wins: number, xp: number } }
-  d.jackpot   ||= { pot: "0", current: null }; // pot in raw token units (string), current round metadata
-  d.quests    ||= { list: {}, submits: {} };   // quests + submissions
-  db.data = d;
+const defaults = {
+  blocks: { last: 0 },
+  raffles: {},
+  tickets: {},
+  stats: { wallets: {} },
+  jackpot: { pot: "0", current: null }
 }
 
-export async function initDB() {
+let dbInstance = null;
+
+export async function initDB(file = 'data.json') {
+  if (dbInstance) return dbInstance;
+  const adapter = new JSONFile(file);
+  const db = new Low(adapter, defaults);
   await db.read();
-  ensureShape();
+  db.data ||= { ...defaults };
   await db.write();
+  dbInstance = db;
+  return dbInstance;
 }
