@@ -1,0 +1,69 @@
+{
+  "activity": {
+    "-1002849463271": {
+      "1087968824": 1762925736096,
+      "8114074621": 1762929420989,
+      "6820752140": 1762935004890,
+      "7607356749": 1762928305481,
+      "7121953485": 1762931740443
+    },
+    "6820752140": {
+      "6820752140": 1762932286988
+    }
+  },
+  "whitelist": {
+    "-1002849463271": {},
+    "6820752140": {}
+  },
+  "settings": {
+    "-1002849463271": {},
+    "6820752140": {},
+    "alertChats": [
+      "6820752140"
+    ],
+    "lastAlerts": {},
+    "seenTx": {
+      "0xa6f6cbd8c8073bd82260dbe3c721314c7ff05d91976a0d1a18212af2d6610756": 1762932696428,
+      "0xdf3bafad13d5b1d067cff918858bbefc1114cb1dfdfc510af51f0406cd1b0692": 1762932696955
+    }
+  },
+  "users": {
+    "6820752140": {
+      "nonce": "MIGGZY-43dkao29oke"
+    }
+  },
+  "wallets": {},
+  "raffles": {
+    "current": {
+      "id": "wZ1tSN5M",
+      "startedAt": 1762934181859,
+      "ticketPrice": "100000000000000000000000",
+      "entries": 0,
+      "closed": false,
+      "endBlock": 0,
+      "snapshotHash": null,
+      "saltCommit": null,
+      "saltReveal": null,
+      "entropy": null,
+      "winner": null
+    }
+  },
+  "tickets": {
+    "uQoZtcAB": {},
+    "wZ1tSN5M": {}
+  },
+  "blocks": {
+    "last": 38073193
+  },
+  "stats": {
+    "wallets": {}
+  },
+  "jackpot": {
+    "pot": "0",
+    "current": null
+  },
+  "quests": {
+    "list": {},
+    "submits": {}
+  }
+}
