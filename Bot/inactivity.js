@@ -1,5 +1,5 @@
-import { db } from '../db.js';
-import { CFG } from '../config.js';
+import { db } from './db.js';
+import { CFG } from './config.js';
 
 export function inactivityFeature(bot) {
   const DAYS = parseInt(process.env.INACTIVITY_DAYS || '3', 10);
@@ -86,3 +86,4 @@ export function inactivityFeature(bot) {
     }
   }, Math.max(1, INTERVAL_MIN) * 60 * 1000);
 }
+
