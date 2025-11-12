@@ -1,12 +1,12 @@
 // Bot/index.js
-import dotenv from 'dotenv'
+import dotenv from 'dotenv';
 dotenv.config();
 
-import { Telegraf } from 'telegraf'
-import { ethers } from 'ethers'
-import { initDB } from './db.js'
-import { raffleFeature } from './raffle.js'
+import { Telegraf } from 'telegraf';
 import { ethers } from 'ethers';
+import { initDB } from './db.js';
+import { raffleFeature } from './raffle.js';
+
 console.log('ethers version =>', ethers.version); // should log 5.7.2
 
 /* ---------- Boot ---------- */
@@ -46,4 +46,5 @@ http.createServer((_, res) => res.end('ok')).listen(PORT, () =>
 // Graceful stop
 process.once('SIGINT',  () => bot.stop('SIGINT'));
 process.once('SIGTERM', () => bot.stop('SIGTERM'));
+
 
