@@ -4,17 +4,17 @@ import { CFG } from './config.js';
 import { initDB } from './db.js';
 import './health.js';
 
-import { raffleFeature }      from './features/raffle.js';
-import { walletFeature }      from './features/wallet.js';
-import { modFeature }         from './features/mod.js';
-import { hypeFeature }        from './features/hype.js';
-import { inactivityFeature }  from './features/inactivity.js';
-import { holdersFeature }     from './features/holders.js';
-import { buysFeature }        from './features/buys.js';
-import { balancesFeature }    from './features/balances.js';
-import { leaderboardFeature } from './features/leaderboard.js';
-import { jackpotFeature }     from './features/jackpot.js';
-import { questsFeature }      from './features/quests.js';
+import { raffle }      from './raffle.js';
+import { wallet }      from './wallet.js';
+import { mod }         from './mod.js';
+import { hype }        from './hype.js';
+import { inactivity }  from './inactivity.js';
+import { holders }     from './holders.js';
+import { buys }        from './buys.js';
+import { balances }    from './balances.js';
+import { leaderboard } from './leaderboard.js';
+import { jackpot }     from './jackpot.js';
+import { quests }      from './quests.js';
 
 dotenv.config();
 
@@ -23,17 +23,18 @@ await initDB();
 
 bot.command('ping', (ctx) => ctx.reply('pong'));
 
-raffleFeature(bot);
-walletFeature(bot);
-modFeature(bot);
-hypeFeature(bot);
-inactivityFeature(bot);
-holdersFeature(bot);
-buysFeature(bot);
-balancesFeature(bot);
-leaderboardFeature(bot);
-jackpotFeature(bot);
-questsFeature(bot);
+raffle(bot);
+wallet(bot);
+mod(bot);
+hype(bot);
+inactivity(bot);
+holders(bot);
+buys(bot);
+balances(bot);
+leaderboard(bot);
+jackpot(bot);
+quests(bot);
 
 bot.launch();
 console.log('✅ MIGGZY bot running');
+
