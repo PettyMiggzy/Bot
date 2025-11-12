@@ -1,8 +1,10 @@
+import { db } from './db.js';
 import { ethers } from 'ethers';
 import dayjs from 'dayjs';
 import { nanoid } from 'nanoid';
 import { createHash } from 'crypto';
 import { initDB } from './db.js';
+const db = await initDB();
 import { CFG } from './config.js';
 
 const ERC20_ABI = [
@@ -271,4 +273,5 @@ export function raffleFeature(bot, provider) {
 
   setInterval(scan, INTERVAL_MS);
 }
+
 
