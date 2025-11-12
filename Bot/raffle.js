@@ -1,11 +1,17 @@
-import { db } from './db.js';
-import { ethers } from 'ethers';
-import dayjs from 'dayjs';
-import { nanoid } from 'nanoid';
-import { createHash } from 'crypto';
-import { initDB } from './db.js';
-const db = await initDB();
-import { CFG } from './config.js';
+// Bot/raffle.js
+import { ethers } from 'ethers'
+import dayjs from 'dayjs'
+import { nanoid } from 'nanoid'
+import { createHash } from 'crypto'
+
+/** ====== CONFIG pulled from env (simple) ====== **/
+const CFG = {
+  TOKEN_ADDR:   (process.env.TOKEN_ADDR || '').toLowerCase(),
+  RAFFLE_ADDR:  (process.env.RAFFLE_ADDR || '').toLowerCase(),
+  TICKET_PRICE: BigInt(process.env.TICKET_PRICE_WEI || '100000000000000000000000'), // 100k MIGGZY if 18d
+  CONFIRMATIONS: parseInt(process.env.CONFIRMATIONS || '2', 10),
+  ADMINS: (process.env.ADMINS || '').split(',').map(s => s.trim()).filter(Boolean),
+};
 
 const ERC20_ABI = [
   "event Transfer(address indexed from, address indexed to, uint256 value)"
@@ -30,7 +36,8 @@ function buildSnapshotHash(ticketsMap = {}) {
   return sha256Hex(csv);
 }
 
-export function raffleFeature(bot, provider) {
+export function raffleFeature(bot, provider, db) {
+  // Ensure structure exists
   db.data.blocks  ||= { last: 0 };
   db.data.raffles ||= {};
   db.data.tickets ||= {};
@@ -153,7 +160,7 @@ export function raffleFeature(bot, provider) {
 
     const saltReveal = SECRET_SALT;
     if (sha256Hex(saltReveal) !== r.saltCommit)
-      return ctx.reply("Salt commit does not match SECRET_SALT (don’t change it mid-round).");
+      return ctx.reply("Salt commit does not match SECRET_SALT.");
 
     const tix = db.data.tickets[r.id] || {};
     const entries = [];
@@ -174,7 +181,7 @@ export function raffleFeature(bot, provider) {
     const idx = ethers.BigNumber.from(entropyHex).mod(entries.length).toNumber();
     const winner = entries[idx];
 
-    // NEW: record winner in stats
+    // record stats
     db.data.stats.wallets[winner] ||= { tickets: 0, wins: 0, xp: 0 };
     db.data.stats.wallets[winner].wins += 1;
 
@@ -195,7 +202,7 @@ export function raffleFeature(bot, provider) {
     );
   });
 
-  // ---- MIGGZY transfer watcher (UPDATED: stats + jackpot accounting)
+  // ---- MIGGZY transfer watcher
   const token = new ethers.Contract(CFG.TOKEN_ADDR, ERC20_ABI, provider);
 
   async function getLogsChunk(fromBlock, toBlock) {
@@ -242,18 +249,16 @@ export function raffleFeature(bot, provider) {
           const tickets = Number(value / CFG.TICKET_PRICE);
           if (tickets <= 0) continue;
 
-          // track tickets for this raffle
           db.data.tickets[r.id] ||= {};
           db.data.tickets[r.id][from] = (db.data.tickets[r.id][from] || 0) + tickets;
           r.entries += tickets;
 
-          // NEW: global stats per wallet
           db.data.stats.wallets[from] ||= { tickets: 0, wins: 0, xp: 0 };
           db.data.stats.wallets[from].tickets += tickets;
 
-          // NEW: jackpot accounting
-          if (JACKPOT_PCT > 0) {
-            const add = (value * BigInt(JACKPOT_PCT)) / 100n; // raw units
+          if (parseInt(process.env.JACKPOT_PERCENT || '10', 10) > 0) {
+            const pct = BigInt(parseInt(process.env.JACKPOT_PERCENT || '10', 10));
+            const add = (value * pct) / 100n;
             const potNow = BigInt(db.data.jackpot.pot || "0");
             db.data.jackpot.pot = (potNow + add).toString();
           }
@@ -273,5 +278,3 @@ export function raffleFeature(bot, provider) {
 
   setInterval(scan, INTERVAL_MS);
 }
-
-
