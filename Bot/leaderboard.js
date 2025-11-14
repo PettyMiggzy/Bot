@@ -1,4 +1,4 @@
-import { db } from './db.js';
+import { db } from '../db.js';
 
 export function leaderboardFeature(bot) {
   function topN(map, key, n=10) {
@@ -29,4 +29,3 @@ export function leaderboardFeature(bot) {
     ctx.reply(`📈 Top XP\n${out}`);
   });
 }
-

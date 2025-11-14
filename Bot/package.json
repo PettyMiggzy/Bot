@@ -1,17 +1,20 @@
 {
-  "name": "miggzy-bot",
+  "name": "miggzy-tg-bot",
   "version": "1.0.0",
   "type": "module",
-  "main": "index.js",
+  "main": "Bot/index.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node Bot/index.js"
+  },
+  "engines": {
+    "node": ">=20 <26"
   },
   "dependencies": {
-    "telegraf": "^4.16.3",
-    "ethers": "5.7.2",
-    "lowdb": "^6.1.1",
     "dayjs": "^1.11.11",
-    "nanoid": "^4.0.2",
-    "dotenv": "^16.3.1"
+    "dotenv": "^16.4.5",
+    "ethers": "^6.13.2",
+    "lowdb": "^7.0.1",
+    "nanoid": "^5.1.6",
+    "telegraf": "^4.16.3"
   }
 }

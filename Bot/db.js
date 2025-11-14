@@ -1,30 +1,29 @@
-// Bot/db.js
-import { Low } from 'lowdb'
-import { JSONFile } from 'lowdb/node'
+import { Low } from 'lowdb';
+import { JSONFile } from 'lowdb/node';
 
-const defaults = {
-  blocks: { last: 0 },
-  raffles: {},
-  tickets: {},
-  stats: { wallets: {} },
-  jackpot: { pot: "0", current: null },
-  // NEW:
-  settings: { inactivityDays: 3, alerts: true },
-  lastSeen: {} // { [chatId]: { [userId]: timestampMs } }
+const adapter = new JSONFile('./data.json');
+export const db = new Low(adapter, {});
+
+function ensureShape() {
+  const d = db.data || {};
+  d.users     ||= {};
+  d.wallets   ||= {};
+  d.raffles   ||= {};
+  d.tickets   ||= {};
+  d.blocks    ||= { last: 0 };
+  d.activity  ||= {};
+  d.whitelist ||= {};
+  d.settings  ||= { alertChats: [], lastAlerts: {} };
+
+  // NEW in Phase 4:
+  d.stats     ||= { wallets: {} };     // { wallet: { tickets: number, wins: number, xp: number } }
+  d.jackpot   ||= { pot: "0", current: null }; // pot in raw token units (string), current round metadata
+  d.quests    ||= { list: {}, submits: {} };   // quests + submissions
+  db.data = d;
 }
 
-let dbInstance = null;
-
-export async function initDB(file = 'data.json') {
-  if (dbInstance) return dbInstance;
-  const adapter = new JSONFile(file);
-  const db = new Low(adapter, defaults);
+export async function initDB() {
   await db.read();
-  db.data ||= { ...defaults };
-  // ensure new keys exist if upgrading
-  db.data.settings ||= { inactivityDays: 3, alerts: true };
-  db.data.lastSeen ||= {};
+  ensureShape();
   await db.write();
-  dbInstance = db;
-  return dbInstance;
 }

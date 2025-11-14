@@ -1,6 +1,6 @@
 import { ethers } from 'ethers';
-import { CFG } from './config.js';
-import { db } from './db.js';
+import { CFG } from '../config.js';
+import { db } from '../db.js';
 
 const ERC20_ABI = [
   "function balanceOf(address) view returns (uint256)"
@@ -66,4 +66,3 @@ export function balancesFeature(bot, provider) {
 
   setInterval(check, INTERVAL);
 }
-

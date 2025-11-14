@@ -1,5 +1,5 @@
 import { ethers } from 'ethers';
-import { db } from './db.js';
+import { db } from '../db.js';
 
 export function walletFeature(bot) {
   bot.command('start', ctx => {
@@ -58,4 +58,3 @@ export function walletFeature(bot) {
     ctx.reply(`🧾 Profile\nWallet: ${u.wallet.slice(0,6)}…${u.wallet.slice(-4)}\nXP: (soon)`);
   });
 }
-

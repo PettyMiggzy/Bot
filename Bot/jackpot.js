@@ -2,8 +2,8 @@ import { ethers } from 'ethers';
 import { nanoid } from 'nanoid';
 import { createHash } from 'crypto';
 import dayjs from 'dayjs';
-import { db } from './db.js';
-import { CFG } from './config.js';
+import { db } from '../db.js';
+import { CFG } from '../config.js';
 
 function sha256Hex(x){ return createHash('sha256').update(x).digest('hex'); }
 
@@ -151,4 +151,3 @@ export function jackpotFeature(bot, provider) {
     ctx.reply('♻️ Jackpot pot reset and round cleared.');
   });
 }
-
