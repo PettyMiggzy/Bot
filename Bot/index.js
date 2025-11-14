@@ -67,7 +67,7 @@ let provider = null;
 
 for (const url of [...rpcList, FALLBACK_RPC]) {
   try {
-    const p = new ethers.providers.JsonRpcProvider(url);
+    const p = new ethers.JsonRpcProvider(url);
     const block = await p.getBlockNumber();
     console.log(`✅ Using RPC: ${url} (block ${block})`);
     provider = p;
@@ -79,7 +79,7 @@ for (const url of [...rpcList, FALLBACK_RPC]) {
 
 if (!provider) {
   console.error('⚠️ All RPCs failed health-check, using fallback without testing');
-  provider = new ethers.providers.JsonRpcProvider(FALLBACK_RPC);
+  provider = new ethers.JsonRpcProvider(FALLBACK_RPC);
 }
 
 
@@ -163,5 +163,6 @@ main();
 // Enable graceful stop
 process.once('SIGINT', () => bot.stop('SIGINT'));
 process.once('SIGTERM', () => bot.stop('SIGTERM'));
+
 
 
