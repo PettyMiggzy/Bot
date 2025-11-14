@@ -1,6 +1,6 @@
 import { nanoid } from 'nanoid';
-import { db } from '../db.js';
-import { CFG } from '../config.js';
+import { db } from './db.js';
+import { CFG } from './config.js';
 
 export function questsFeature(bot) {
   const DEFAULT_XP = parseInt(process.env.QUEST_DEFAULT_XP || '25', 10);
@@ -78,3 +78,4 @@ export function questsFeature(bot) {
     ctx.reply(`📋 Open Quests\n${out}`);
   });
 }
+
