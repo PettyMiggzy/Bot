@@ -1,7 +1,7 @@
 // src/features/buys.js — clean, de-duped pool watcher
 import { ethers } from 'ethers';
-import { CFG } from '../config.js';
-import { db } from '../db.js';
+import { CFG } from './config.js';
+import { db } from './db.js';
 
 const ERC20_ABI = [
   "event Transfer(address indexed from, address indexed to, uint256 value)"
@@ -90,3 +90,4 @@ export function buysFeature(bot, provider) {
   // Run every 20s
   setInterval(scan, 20000);
 }
+
