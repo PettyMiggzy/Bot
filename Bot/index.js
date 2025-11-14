@@ -82,7 +82,6 @@ if (!provider) {
   provider = new ethers.providers.JsonRpcProvider(FALLBACK_RPC);
 }
 
-}
 
 // ------------------------
 // CORE TEXT COMMANDS
@@ -164,4 +163,5 @@ main();
 // Enable graceful stop
 process.once('SIGINT', () => bot.stop('SIGINT'));
 process.once('SIGTERM', () => bot.stop('SIGTERM'));
+
 
