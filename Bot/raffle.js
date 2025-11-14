@@ -196,25 +196,33 @@ export function raffleFeature(bot, provider) {
   // ---- MIGGZY transfer watcher (UPDATED: stats + jackpot accounting)
   const token = new ethers.Contract(CFG.TOKEN_ADDR, ERC20_ABI, provider);
 
-  async function getLogsChunk(fromBlock, toBlock) {
-    const filter = token.filters.Transfer(null, CFG.RAFFLE_ADDR);
-    let attempt = 0;
-    while (true) {
-      try {
-        return await token.queryFilter(filter, fromBlock, toBlock);
-      } catch (e) {
-        const msg = String(e?.message || e);
-        const retriable = /timeout|503|Server error|SERVER_ERROR|429|no backend/i.test(msg);
-        if (retriable && attempt < RETRIES) {
-          attempt++;
-          await new Promise(r => setTimeout(r, BACKOFF_MS * attempt));
-          continue;
-        }
-        console.error(`scan error chunk [${fromBlock}-${toBlock}]:`, msg);
-        return [];
+async function getLogsChunk(fromBlock, toBlock) {
+  const filter = token.filters.Transfer(null, CFG.RAFFLE_ADDR);
+  let attempt = 0;
+
+  while (true) {
+    try {
+      // try getting logs normally
+      return await token.queryFilter(filter, fromBlock, toBlock);
+    } catch (e) {
+      const msg = String(e?.message || e);
+
+      // treat BAD_DATA or “missing response” as retriable
+      const retriable = /timeout|503|Server error|SERVER_ERROR|429|no backend|missing response for request|BAD_DATA/i.test(msg);
+
+      if (retriable && attempt < RETRIES) {
+        attempt++;
+        await new Promise(r => setTimeout(r, BACKOFF_MS * attempt));
+        continue;
       }
+
+      // downgrade error → warning
+      console.warn(`scan warn chunk [${fromBlock}-${toBlock}]:`, msg);
+      return [];
     }
   }
+}
+
 
   async function scan() {
     try {
@@ -271,5 +279,6 @@ export function raffleFeature(bot, provider) {
 
   setInterval(scan, INTERVAL_MS);
 }
+
 
 
