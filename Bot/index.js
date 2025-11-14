@@ -50,18 +50,22 @@ const db = await initDB();
 // INIT BASE PROVIDER
 // ------------------------
 
-const rpcList = (
+// ---- Base RPC provider (with safe fallback, no hard crash) ----
+const rawRPC =
   process.env.BASE_RPC ||
-  CFG.RPCS ||
-  'https://base-rpc.publicnode.com'
-)
+  (CFG.RPCS || '') ||
+  '';
+
+const rpcList = rawRPC
   .split(',')
   .map(r => r.trim())
   .filter(Boolean);
 
+const FALLBACK_RPC = 'https://base-rpc.publicnode.com';
+
 let provider = null;
 
-for (const url of rpcList) {
+for (const url of [...rpcList, FALLBACK_RPC]) {
   try {
     const p = new ethers.providers.JsonRpcProvider(url);
     const block = await p.getBlockNumber();
@@ -74,7 +78,10 @@ for (const url of rpcList) {
 }
 
 if (!provider) {
-  throw new Error('❌ No working RPC endpoint in BASE_RPC');
+  console.error('⚠️ All RPCs failed health-check, using fallback without testing');
+  provider = new ethers.providers.JsonRpcProvider(FALLBACK_RPC);
+}
+
 }
 
 // ------------------------
@@ -157,3 +164,4 @@ main();
 // Enable graceful stop
 process.once('SIGINT', () => bot.stop('SIGINT'));
 process.once('SIGTERM', () => bot.stop('SIGTERM'));
+
