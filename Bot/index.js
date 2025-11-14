@@ -24,7 +24,7 @@ await initDB();
 
 bot.command('ping', (ctx) => ctx.reply('pong'));
 
-raffleFeature(bot, provider);
+raffleFeature(bot,);
 walletFeature(bot);
 modFeature(bot);
 hypeFeature(bot);
@@ -41,4 +41,5 @@ aiFeature(bot);
 
 bot.launch();
 console.log('✅ MIGGZY bot running');
+
 
