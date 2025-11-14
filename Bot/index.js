@@ -24,7 +24,7 @@ await initDB();
 
 bot.command('ping', (ctx) => ctx.reply('pong'));
 
-raffleFeature(bot);
+raffleFeature(bot, provider);
 walletFeature(bot);
 modFeature(bot);
 hypeFeature(bot);
@@ -36,5 +36,9 @@ leaderboardFeature(bot);
 jackpotFeature(bot);
 questsFeature(bot);
 
+// 🔮 NEW: AI + art feature (must come AFTER basic commands)
+aiFeature(bot);
+
 bot.launch();
 console.log('✅ MIGGZY bot running');
+
