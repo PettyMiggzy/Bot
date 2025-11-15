@@ -8,9 +8,5 @@ export function hypeFeature(bot) {
     const pick = posts[Math.floor(Math.random()*posts.length)];
     ctx.reply(pick);
   });
-  bot.command('raid', ctx => {
-    const url = (ctx.message.text.split(' ')[1] || '').trim();
-    if (!url) return ctx.reply("Usage: /raid <link>");
-    ctx.reply(`🚨 RAID TIME 🚨\n${url}\nDrop screenshots below!`);
-  });
 }
+
